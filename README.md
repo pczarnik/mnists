@@ -2,12 +2,13 @@
 
 MNISTs provides an easy way to use MNIST and other MNIST-like datasets (e.g. FashionMNIST, KMNIST) in your numpy code.
 
-MNISTs replicates what torchvision.datasets.mnist provides, but without all the dependencies - the only dependency is numpy.
+MNISTs replicates the functionality of `torchvision.datasets.mnist` without the need to download dozens of dependencies.
+MNISTs has only one dependency - `numpy`.
 
 
 ## Usage
 
-Each dataset contains train/test images and labels in a numpy array of shape `(n_samples, img_height, img_width)`.
+Each dataset stores train/test images as numpy arrays of shape `(n_samples, img_height, img_width)` and train/test labels as numpy arrays of shape `(n_samples,)`.
 
 MNIST example:
 ```python
@@ -29,8 +30,8 @@ dtype('uint8')
 (10000, 28, 28)
 >>> mnist.test_labels.shape
 (10000,)
->>> mnist.classes
-['0 - zero', '1 - one', '2 - two', '3 - three', '4 - four', '5 - five', '6 - six', '7 - seven', '8 - eight', '9 - nine']
+>>> mnist.classes[:3]
+['0 - zero', '1 - one', '2 - two']
 ```
 
 FashionMNIST example:
@@ -66,7 +67,7 @@ plt.show()
 
 ## Installation
 
-Install from PyPi:
+Install `mnists` from [PyPi](https://pypi.org/project/mnists):
 ```
 pip install mnists
 ```
@@ -76,3 +77,8 @@ pip install -U git+https://github.com/pczarnik/mnists
 ```
 
 The only requirements for MNISTs are `numpy>=1.22` and `python>=3.9`.
+
+
+## Acknowledgments
+
+The main inspirations for MNISTs were [`mnist`](https://github.com/datapythonista/mnist) and [`torchvision.datasets.mnist`](https://github.com/pytorch/vision).
