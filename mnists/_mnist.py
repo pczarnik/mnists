@@ -16,6 +16,38 @@ TEMPORARY_DIR = tempfile.gettempdir()
 
 
 class MNIST:
+    """
+    MNIST Dataset
+    http://yann.lecun.com/exdb/mnist
+
+    Attributes
+    ----------
+    target_dir : str
+        Directory where all files exist or will be downloaded.
+    train_images, train_labels, test_images, test_labels : np.ndarray, optional
+        Numpy array representation of train/test images/labels from MNIST dataset.
+        May be None if wasn't loaded manually or during initialization.
+    classes : list[str]
+        Class names.
+    mirrors : list[str]
+        List of urls where dataset is hosted.
+    resources : dict[str, tuple[str, str]]
+       Dictionary of data files with filename and md5 hash.
+    """
+
+    classes = [
+        "0 - zero",
+        "1 - one",
+        "2 - two",
+        "3 - three",
+        "4 - four",
+        "5 - five",
+        "6 - six",
+        "7 - seven",
+        "8 - eight",
+        "9 - nine",
+    ]
+
     mirrors = [
         "https://ossci-datasets.s3.amazonaws.com/mnist/",
         "http://yann.lecun.com/exdb/mnist/",
@@ -40,19 +72,6 @@ class MNIST:
         ),
     }
 
-    classes = [
-        "0 - zero",
-        "1 - one",
-        "2 - two",
-        "3 - three",
-        "4 - four",
-        "5 - five",
-        "6 - six",
-        "7 - seven",
-        "8 - eight",
-        "9 - nine",
-    ]
-
     default_dir = os.path.join(TEMPORARY_DIR, "mnist")
 
     def __init__(
@@ -62,6 +81,19 @@ class MNIST:
         force_download: bool = False,
         load: bool = True,
     ) -> None:
+        """
+        Parameters
+        ----------
+        target_dir : str, default='/tmp/mnist/'
+            Directory where all files exist or will be downloaded to (if `download` is True).
+        download : bool, default=True
+            If True and files don't exist in `target_dir`, downloads all files to `target_dir`.
+        force_download : bool, default=False
+            If True, downloads all files to `target_dir`, even if they exist there.
+        load : bool, default=True
+            If True, loads data from files in `target_dir`.
+        """
+
         self.target_dir = self.default_dir if target_dir is None else target_dir
 
         self.train_images: Optional[np.ndarray] = None
@@ -69,13 +101,22 @@ class MNIST:
         self.test_images: Optional[np.ndarray] = None
         self.test_labels: Optional[np.ndarray] = None
 
-        if download:
+        if download or force_download:
             self.download(force_download)
 
         if load:
             self.load()
 
     def download(self, force: bool = False) -> None:
+        """
+        Download files from mirrors and save to `target_dir`.
+
+        Parameters
+        ----------
+        force : bool=False
+            If True, download all files even if they exist.
+        """
+
         os.makedirs(self.target_dir, exist_ok=True)
 
         for filename, md5 in self.resources.values():
@@ -87,6 +128,10 @@ class MNIST:
             self._download_file(filename, filepath)
 
     def load(self) -> None:
+        """
+        Load data from files in `target_dir`.
+        """
+
         for key, (filename, md5) in self.resources.items():
             filepath = os.path.join(self.target_dir, filename)
 
@@ -171,6 +216,38 @@ class MNIST:
 
 
 class FashionMNIST(MNIST):
+    """
+    Fashion-MNIST Dataset
+    https://github.com/zalandoresearch/fashion-mnist
+
+    Attributes
+    ----------
+    target_dir : str
+        Directory where all files exist or will be downloaded.
+    train_images, train_labels, test_images, test_labels : np.ndarray, optional
+        Numpy array representation of train/test images/labels from FashionMNIST dataset.
+        May be None if wasn't loaded manually or during initialization.
+    classes : list[str]
+        Class names.
+    mirrors : list[str]
+        List of urls where dataset is hosted.
+    resources : dict[str, tuple[str, str]]
+       Dictionary of data files with filename and md5 hash.
+    """
+
+    classes = [
+        "T-shirt/top",
+        "Trouser",
+        "Pullover",
+        "Dress",
+        "Coat",
+        "Sandal",
+        "Shirt",
+        "Sneaker",
+        "Bag",
+        "Ankle boot",
+    ]
+
     mirrors = [
         "http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/",
     ]
@@ -194,23 +271,42 @@ class FashionMNIST(MNIST):
         ),
     }
 
-    classes = [
-        "T-shirt/top",
-        "Trouser",
-        "Pullover",
-        "Dress",
-        "Coat",
-        "Sandal",
-        "Shirt",
-        "Sneaker",
-        "Bag",
-        "Ankle boot",
-    ]
-
     default_dir = os.path.join(TEMPORARY_DIR, "fmnist")
 
 
 class KMNIST(MNIST):
+    """
+    Kuzushiji-MNIST Dataset
+    https://github.com/rois-codh/kmnist
+
+    Attributes
+    ----------
+    target_dir : str
+        Directory where all files exist or will be downloaded.
+    train_images, train_labels, test_images, test_labels : np.ndarray, optional
+        Numpy array representation of train/test images/labels from KMNIST dataset.
+        May be None if wasn't loaded manually or during initialization.
+    classes : list[str]
+        Class names.
+    mirrors : list[str]
+        List of urls where dataset is hosted.
+    resources : dict[str, tuple[str, str]]
+       Dictionary of data files with filename and md5 hash.
+    """
+
+    classes = [
+        "o",
+        "ki",
+        "su",
+        "tsu",
+        "na",
+        "ha",
+        "ma",
+        "ya",
+        "re",
+        "wo",
+    ]
+
     mirrors = [
         "http://codh.rois.ac.jp/kmnist/dataset/kmnist/",
     ]
@@ -233,18 +329,5 @@ class KMNIST(MNIST):
             "7320c461ea6c1c855c0b718fb2a4b134",
         ),
     }
-
-    classes = [
-        "o",
-        "ki",
-        "su",
-        "tsu",
-        "na",
-        "ha",
-        "ma",
-        "ya",
-        "re",
-        "wo",
-    ]
 
     default_dir = os.path.join(TEMPORARY_DIR, "kmnist")
