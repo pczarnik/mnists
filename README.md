@@ -44,7 +44,7 @@ plt.title(fmnist.classes[fmnist.train_labels[0]])
 plt.axis('off')
 plt.show()
 ```
-![FashionMNIST example](https://github.com/pczarnik/mnists/imgs/fmnist_boot.png)
+![FashionMNIST example](https://raw.githubusercontent.com/pczarnik/mnists/main/imgs/fmnist_boot.png)
 
 KMNIST example:
 ```python
@@ -61,7 +61,7 @@ plt.imshow(
 plt.axis('off')
 plt.show()
 ```
-![KMNIST example](https://github.com/pczarnik/mnists/imgs/kmnist_256.png)
+![KMNIST example](https://raw.githubusercontent.com/pczarnik/mnists/main/imgs/kmnist_256.png)
 
 
 ## Installation
