@@ -1,9 +1,4 @@
-import array
-import functools
-import gzip
-import hashlib
 import os
-import struct
 import tempfile
 from typing import Optional
 from urllib.error import URLError
@@ -11,6 +6,8 @@ from urllib.parse import urljoin
 from urllib.request import urlretrieve
 
 import numpy as np
+
+from .utils import check_file_integrity, read_idx_file
 
 TEMPORARY_DIR = tempfile.gettempdir()
 
@@ -122,7 +119,7 @@ class MNIST:
         for filename, md5 in self.resources.values():
             filepath = os.path.join(self.target_dir, filename)
 
-            if not force and self._exists(filepath, md5):
+            if not force and check_file_integrity(filepath, md5):
                 continue
 
             self._download_file(filename, filepath)
@@ -135,26 +132,13 @@ class MNIST:
         for key, (filename, md5) in self.resources.items():
             filepath = os.path.join(self.target_dir, filename)
 
-            if not self._exists(filepath, md5):
+            if not check_file_integrity(filepath, md5):
                 raise RuntimeError(
                     "Dataset not found. Use download=True or mnist.download() to download it"
                 )
 
-            fopen = gzip.open if os.path.splitext(filepath)[1] == ".gz" else open
-
-            with fopen(filepath, "rb") as fd:
-                parsed = self._parse_idx(fd)
-                setattr(self, key, parsed)
-
-    def _exists(self, filepath: str, md5: str) -> bool:
-        return os.path.isfile(filepath) and md5 == self._calculate_md5(filepath)
-
-    def _calculate_md5(self, filepath: str, chunk_size: int = 1024 * 1024) -> str:
-        md5 = hashlib.md5()
-        with open(filepath, "rb") as fd:
-            while chunk := fd.read(chunk_size):
-                md5.update(chunk)
-        return md5.hexdigest()
+            data = read_idx_file(filepath)
+            setattr(self, key, data)
 
     def _download_file(self, filename: str, filepath: str) -> None:
         for mirror in self.mirrors:
@@ -168,51 +152,6 @@ class MNIST:
                 continue
 
         raise RuntimeError(f"Error downloading {filename}")
-
-    def _parse_idx(self, fd) -> np.ndarray:
-        DATA_TYPES = {
-            0x08: "B",  # unsigned byte
-            0x09: "b",  # signed byte
-            0x0B: "h",  # short (2 bytes)
-            0x0C: "i",  # int (4 bytes)
-            0x0D: "f",  # float (4 bytes)
-            0x0E: "d",  # double (8 bytes)
-        }
-
-        header = fd.read(4)
-        if len(header) != 4:
-            raise RuntimeError(
-                "Invalid IDX file, file empty or does not contain a full header."
-            )
-
-        zeros, data_type, num_dimensions = struct.unpack(">HBB", header)
-
-        if zeros != 0:
-            raise RuntimeError(
-                "Invalid IDX file, file must start with two zero bytes. "
-                "Found 0x%02x" % zeros
-            )
-
-        try:
-            data_type = DATA_TYPES[data_type]
-        except KeyError:
-            raise RuntimeError("Unknown data type 0x%02x in IDX file" % data_type)
-
-        dimension_sizes = struct.unpack(
-            ">" + "I" * num_dimensions, fd.read(4 * num_dimensions)
-        )
-
-        data = array.array(data_type, fd.read())
-        data.byteswap()  # looks like array.array reads data as little endian
-
-        expected_items = functools.reduce(lambda x, y: x * y, dimension_sizes)
-        if len(data) != expected_items:
-            raise RuntimeError(
-                "IDX file has wrong number of items. "
-                "Expected: %d. Found: %d" % (expected_items, len(data))
-            )
-
-        return np.array(data).reshape(dimension_sizes)
 
 
 class FashionMNIST(MNIST):
