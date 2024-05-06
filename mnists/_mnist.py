@@ -21,9 +21,11 @@ class MNIST:
     ----------
     target_dir : str
         Directory where all files exist or will be downloaded.
-    train_images, train_labels, test_images, test_labels : np.ndarray, optional
+    _train_images, _train_labels, _test_images, _test_labels : np.ndarray, optional
         Numpy array representation of train/test images/labels from MNIST dataset.
         May be None if wasn't loaded manually or during initialization.
+        If is not None, corresponding getter, e.g., _train_images -> train_images(),
+        will be available.
     classes : list[str]
         Class names.
     mirrors : list[str]
@@ -93,10 +95,10 @@ class MNIST:
 
         self.target_dir = self.default_dir if target_dir is None else target_dir
 
-        self.train_images: Optional[np.ndarray] = None
-        self.train_labels: Optional[np.ndarray] = None
-        self.test_images: Optional[np.ndarray] = None
-        self.test_labels: Optional[np.ndarray] = None
+        self._train_images: Optional[np.ndarray] = None
+        self._train_labels: Optional[np.ndarray] = None
+        self._test_images: Optional[np.ndarray] = None
+        self._test_labels: Optional[np.ndarray] = None
 
         if download or force_download:
             self.download(force_download)
@@ -134,11 +136,22 @@ class MNIST:
 
             if not check_file_integrity(filepath, md5):
                 raise RuntimeError(
-                    "Dataset not found. Use download=True or mnist.download() to download it"
+                    f"Dataset '{key}' not found in '{filepath}' or MD5 "
+                    "checksum is not valid. "
+                    "Use download=True or .download() to download it"
                 )
 
             data = read_idx_file(filepath)
-            setattr(self, key, data)
+            self._add_getter(key, data)
+
+    def _add_getter(self, fn_name: str, data: np.ndarray) -> None:
+        var_name = f"_{fn_name}"
+        setattr(self, var_name, data)
+
+        def getter() -> np.ndarray:
+            return getattr(self, var_name)
+
+        setattr(self, fn_name, getter)
 
     def _download_file(self, filename: str, filepath: str) -> None:
         for mirror in self.mirrors:
@@ -163,9 +176,11 @@ class FashionMNIST(MNIST):
     ----------
     target_dir : str
         Directory where all files exist or will be downloaded.
-    train_images, train_labels, test_images, test_labels : np.ndarray, optional
+    _train_images, _train_labels, _test_images, _test_labels : np.ndarray, optional
         Numpy array representation of train/test images/labels from FashionMNIST dataset.
         May be None if wasn't loaded manually or during initialization.
+        If is not None, corresponding getter, e.g., _train_images -> train_images(),
+        will be available.
     classes : list[str]
         Class names.
     mirrors : list[str]
@@ -222,9 +237,11 @@ class KMNIST(MNIST):
     ----------
     target_dir : str
         Directory where all files exist or will be downloaded.
-    train_images, train_labels, test_images, test_labels : np.ndarray, optional
+    _train_images, _train_labels, _test_images, _test_labels : np.ndarray, optional
         Numpy array representation of train/test images/labels from KMNIST dataset.
         May be None if wasn't loaded manually or during initialization.
+        If is not None, corresponding getter, e.g., _train_images -> train_images(),
+        will be available.
     classes : list[str]
         Class names.
     mirrors : list[str]

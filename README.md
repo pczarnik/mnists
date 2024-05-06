@@ -14,21 +14,21 @@ MNIST example:
 ```python
 >>> from mnists import MNIST
 >>> mnist = MNIST()
->>> type(mnist.train_images)
+>>> type(mnist.train_images())
 <class 'numpy.ndarray'>
->>> mnist.train_images.dtype
+>>> mnist.train_images().dtype
 dtype('uint8')
->>> mnist.train_images.min()
+>>> mnist.train_images().min()
 0
->>> mnist.train_images.max()
+>>> mnist.train_images().max()
 255
->>> mnist.train_images.shape
+>>> mnist.train_images().shape
 (60000, 28, 28)
->>> mnist.train_labels.shape
+>>> mnist.train_labels().shape
 (60000,)
->>> mnist.test_images.shape
+>>> mnist.test_images().shape
 (10000, 28, 28)
->>> mnist.test_labels.shape
+>>> mnist.test_labels().shape
 (10000,)
 >>> mnist.classes[:3]
 ['0 - zero', '1 - one', '2 - two']
@@ -40,8 +40,8 @@ from mnists import FashionMNIST
 import matplotlib.pyplot as plt
 
 fmnist = FashionMNIST()
-plt.imshow(fmnist.train_images[0], cmap='gray')
-plt.title(fmnist.classes[fmnist.train_labels[0]])
+plt.imshow(fmnist.train_images()[0], cmap='gray')
+plt.title(fmnist.classes[fmnist.train_labels()[0]])
 plt.axis('off')
 plt.show()
 ```
@@ -54,7 +54,7 @@ import matplotlib.pyplot as plt
 
 kmnist = KMNIST()
 plt.imshow(
-    kmnist.test_images[:256]
+    kmnist.test_images()[:256]
         .reshape(16, 16, 28, 28)
         .swapaxes(1, 2)
         .reshape(16 * 28, -1),
