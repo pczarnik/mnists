@@ -48,6 +48,7 @@ class MNIST:
     ]
 
     mirrors = [
+        "https://storage.googleapis.com/cvdf-datasets/mnist/",
         "https://ossci-datasets.s3.amazonaws.com/mnist/",
         "http://yann.lecun.com/exdb/mnist/",
     ]
