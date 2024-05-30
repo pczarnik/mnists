@@ -10,11 +10,13 @@ from urllib.request import urlretrieve
 
 import numpy as np
 
-TQDM_AVAIL = True
+_TQDM_ACTIVE = True
 try:
-    from tqdm.auto import tqdm
+    from tqdm import tqdm
 except ImportError:
-    TQDM_AVAIL = False
+    tqdm = object
+    _TQDM_ACTIVE = False
+
 
 IDX_TYPEMAP = {
     0x08: np.uint8,
@@ -122,18 +124,40 @@ def calculate_md5(filepath: str, chunk_size: int = 1024 * 1024) -> str:
     return md5.hexdigest()
 
 
-# https://github.com/tqdm/tqdm/blob/master/examples/tqdm_wget.py
-def tqdm_download_hook(t):
-    last_b = [0]
+class EmptyTqdm(object):
+    # https://github.com/tensorflow/datasets/blob/master/tensorflow_datasets/core/utils/tqdm_utils.py#L56
+    def __init__(self, *args, **kwargs):
+        self._iterator = args[0] if args else None
 
-    def update_to(b=1, bsize=1, tsize=None):
-        if tsize not in (None, -1):
-            t.total = tsize
-        displayed = t.update((b - last_b[0]) * bsize)
-        last_b[0] = b
-        return displayed
+    def __iter__(self):
+        return iter(self._iterator)
 
-    return update_to
+    def __getattr__(self, _):
+        def empty_fn(*args, **kwargs):
+            return
+
+        return empty_fn
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, type_, value, traceback):
+        return
+
+
+class Tqdm(tqdm):
+    # https://github.com/tqdm/tqdm/blob/master/examples/tqdm_wget.py
+    def update_to(self, b=1, bsize=1, tsize=None):
+        if tsize is not None:
+            self.total = tsize
+        return self.update(b * bsize - self.n)
+
+
+def custom_tqdm(*args, **kwargs):
+    if _TQDM_ACTIVE:
+        return Tqdm(*args, **kwargs)
+    else:
+        return EmptyTqdm(*args, **kwargs)
 
 
 def download_file(mirrors: list[str], filename: str, filepath: str) -> None:
@@ -154,28 +178,18 @@ def download_file(mirrors: list[str], filename: str, filepath: str) -> None:
         url = urljoin(mirror, filename)
         try:
             print(f"Downloading {url} to {filepath}")
-            t = None
-            hook = None
-            if TQDM_AVAIL:
-                t = tqdm(
-                    unit="B",
-                    unit_scale=True,
-                    unit_divisor=1024,
-                    miniters=1,
-                    desc=filepath,
-                )
-                hook = tqdm_download_hook(t)
-
-            urlretrieve(url, filepath, reporthook=hook)
-
-            if TQDM_AVAIL:
+            with custom_tqdm(
+                unit="B",
+                unit_scale=True,
+                unit_divisor=1024,
+                miniters=1,
+                desc=filepath,
+            ) as t:
+                urlretrieve(url, filepath, reporthook=t.update_to)
                 t.total = t.n
-                t.close()
-
             return
         except URLError as error:
             print(f"Failed to download {url} (trying next mirror):\n{error}")
-            t.close()
             continue
 
     raise RuntimeError(f"Error downloading {filename}")
