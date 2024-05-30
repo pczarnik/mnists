@@ -1,5 +1,4 @@
-from ._mnist import MNIST
-from ._mnist import FashionMNIST
-from ._mnist import KMNIST
+from ._emnist import EMNIST
+from ._mnist import KMNIST, MNIST, FashionMNIST
 
 __version__ = "0.2.1"

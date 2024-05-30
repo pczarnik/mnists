@@ -2,6 +2,11 @@ import gzip
 import hashlib
 import os
 import struct
+import time
+import zipfile
+from urllib.error import URLError
+from urllib.parse import urljoin
+from urllib.request import urlretrieve
 
 import numpy as np
 
@@ -109,3 +114,67 @@ def calculate_md5(filepath: str, chunk_size: int = 1024 * 1024) -> str:
         while chunk := fd.read(chunk_size):
             md5.update(chunk)
     return md5.hexdigest()
+
+
+def download_file(mirrors: list[str], filename: str, filepath: str) -> None:
+    """
+    Download file trying every mirror if the previous one fails.
+
+    Parameters
+    ----------
+    mirrors : list[str]
+        List of the URLs of the mirrors.
+    filename: str
+        Name of the file on the server.
+    filepath : str
+        Path to the output file.
+    """
+
+    for mirror in mirrors:
+        url = urljoin(mirror, filename)
+        try:
+            print(f"Downloading {url}")
+            urlretrieve(url, filepath)
+            return
+        except URLError as error:
+            print(f"Failed to download {url} (trying next mirror):\n{error}")
+            continue
+
+    raise RuntimeError(f"Error downloading {filename}")
+
+
+def extract_from_zip(zip_path: str, filename: str, output_dir: str) -> None:
+    """
+    Extract file from zip and save it to given directory (with correct metadata).
+
+    Parameters
+    ----------
+    zip_path : str
+        Path to the zip archive.
+    filename : str
+        Name of the file to be extracted.
+    output_dir : str
+        Directory where the file will be saved.
+    """
+
+    with zipfile.ZipFile(zip_path, "r") as archive:
+        file = list(
+            filter(
+                lambda s: os.path.basename(s.filename) == filename, archive.infolist()
+            )
+        )
+
+        if len(file) != 1:
+            raise RuntimeError(
+                f"Error while extracting {filename}: "
+                f"found {len(file)} corresponding files in {zip_path}"
+            )
+
+        file = file[0]
+
+        file.filename = os.path.basename(file.filename)
+        archive.extract(file, output_dir)
+
+        # add correct datetime metadata
+        date_time = time.mktime(file.date_time + (0, 0, -1))
+        os.utime(os.path.join(output_dir, file.filename), (date_time, date_time))

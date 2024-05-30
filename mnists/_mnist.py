@@ -1,13 +1,10 @@
 import os
 import tempfile
 from typing import Optional
-from urllib.error import URLError
-from urllib.parse import urljoin
-from urllib.request import urlretrieve
 
 import numpy as np
 
-from .utils import check_file_integrity, read_idx_file
+from .utils import check_file_integrity, download_file, read_idx_file
 
 TEMPORARY_DIR = tempfile.gettempdir()
 
@@ -125,7 +122,7 @@ class MNIST:
             if not force and check_file_integrity(filepath, md5):
                 continue
 
-            self._download_file(filename, filepath)
+            download_file(self.mirrors, filename, filepath)
 
     def load(self) -> None:
         """
@@ -153,19 +150,6 @@ class MNIST:
             return getattr(self, var_name)
 
         setattr(self, fn_name, getter)
-
-    def _download_file(self, filename: str, filepath: str) -> None:
-        for mirror in self.mirrors:
-            url = urljoin(mirror, filename)
-            try:
-                print(f"Downloading {url}")
-                urlretrieve(url, filepath)
-                return
-            except URLError as error:
-                print(f"Failed to download {url} (trying next mirror):\n{error}")
-                continue
-
-        raise RuntimeError(f"Error downloading {filename}")
 
 
 class FashionMNIST(MNIST):
