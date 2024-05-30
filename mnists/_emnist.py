@@ -60,12 +60,14 @@ class EMNIST(MNIST):
     def _create_split(self, split_cls: type["_Split"]) -> type["_Split"]:
         split_cls.default_base_dir = self.target_dir
         split_cls.default_zip_filepath = os.path.join(self.target_dir, "gzip.zip")
+        split_cls.zip_md5 = self.resources["gzip"][1]
         return split_cls
 
 
 class _Split(MNIST):
     default_base_dir = os.path.join(TEMPORARY_DIR, "emnist")
     default_zip_filepath = os.path.join(default_base_dir, "gzip.zip")
+    zip_md5 = None
 
     def __init__(
         self,
@@ -125,6 +127,12 @@ class _Split(MNIST):
         """
 
         os.makedirs(self.target_dir, exist_ok=True)
+        if not check_file_integrity(self.zip_filepath, self.zip_md5):
+            raise RuntimeError(
+                f"Zip file '{self.zip_filepath}' doesn't exists or its MD5"
+                "checksum is not valid. "
+                "Use EMNIST(download=True) or emnist.download() to download it"
+            )
 
         for filename, md5 in self.resources.values():
             filepath = os.path.join(self.target_dir, filename)
