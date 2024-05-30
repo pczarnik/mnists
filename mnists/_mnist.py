@@ -111,7 +111,7 @@ class MNIST:
         Parameters
         ----------
         force : bool=False
-            If True, download all files even if they exist.
+            If True, downloads all files even if they exist.
         """
 
         os.makedirs(self.target_dir, exist_ok=True)

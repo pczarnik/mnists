@@ -32,6 +32,17 @@ class EMNIST(MNIST):
         download: bool = True,
         force_download: bool = False,
     ) -> None:
+        """
+        Parameters
+        ----------
+        target_dir : str, default='/tmp/emnist/'
+            Directory where zip exists or will be downloaded to (if `download` is True).
+        download : bool, default=True
+            If True and zip doesn't exist in `target_dir`, downloads zip to `target_dir`.
+        force_download : bool, default=False
+            If True, downloads zip to `target_dir`, even if it exists there.
+        """
+
         self.target_dir = self.default_dir if target_dir is None else target_dir
 
         self.Balanced = self._create_split(Balanced)
@@ -62,6 +73,23 @@ class _Split(MNIST):
         load: bool = True,
         transpose: bool = True,
     ) -> None:
+        """
+        Parameters
+        ----------
+        target_dir : str, default='/tmp/emnist/<split_name>/'
+            Directory where all files exist or will be unzipped to (if `unzip` is True).
+        zip_filepath : str, default='/tmp/emnist/gzip.zip'
+            Filepath to zip file containing all EMNIST split files.
+        unzip : bool, default=True
+            If True and files don't exist in `target_dir`, unzips all files to `target_dir`.
+        force_unzip : bool, default=False
+            If True, unzips all files to `target_dir`, even if they exist there.
+        load : bool, default=True
+            If True, loads data from files in `target_dir`.
+        transpose : bool, default=True
+            If True, transposes train and test images.
+        """
+
         self.target_dir = (
             os.path.join(self.default_base_dir, type(self).__name__)
             if target_dir is None
@@ -90,7 +118,7 @@ class _Split(MNIST):
         Parameters
         ----------
         force : bool=False
-            If True, unzip all files even if they exist.
+            If True, unzips all files even if they exist.
         """
 
         os.makedirs(self.target_dir, exist_ok=True)
@@ -110,7 +138,7 @@ class _Split(MNIST):
         Parameters
         ----------
         transpose : bool=True
-            If True, transpose train and test images.
+            If True, transposes train and test images.
         """
 
         super().load()
