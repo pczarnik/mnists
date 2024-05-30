@@ -10,6 +10,12 @@ from urllib.request import urlretrieve
 
 import numpy as np
 
+TQDM_AVAIL = True
+try:
+    from tqdm.auto import tqdm
+except ImportError:
+    TQDM_AVAIL = False
+
 IDX_TYPEMAP = {
     0x08: np.uint8,
     0x09: np.int8,
@@ -116,6 +122,20 @@ def calculate_md5(filepath: str, chunk_size: int = 1024 * 1024) -> str:
     return md5.hexdigest()
 
 
+# https://github.com/tqdm/tqdm/blob/master/examples/tqdm_wget.py
+def tqdm_download_hook(t):
+    last_b = [0]
+
+    def update_to(b=1, bsize=1, tsize=None):
+        if tsize not in (None, -1):
+            t.total = tsize
+        displayed = t.update((b - last_b[0]) * bsize)
+        last_b[0] = b
+        return displayed
+
+    return update_to
+
+
 def download_file(mirrors: list[str], filename: str, filepath: str) -> None:
     """
     Download file trying every mirror if the previous one fails.
@@ -133,11 +153,29 @@ def download_file(mirrors: list[str], filename: str, filepath: str) -> None:
     for mirror in mirrors:
         url = urljoin(mirror, filename)
         try:
-            print(f"Downloading {url}")
-            urlretrieve(url, filepath)
+            print(f"Downloading {url} to {filepath}")
+            t = None
+            hook = None
+            if TQDM_AVAIL:
+                t = tqdm(
+                    unit="B",
+                    unit_scale=True,
+                    unit_divisor=1024,
+                    miniters=1,
+                    desc=filepath,
+                )
+                hook = tqdm_download_hook(t)
+
+            urlretrieve(url, filepath, reporthook=hook)
+
+            if TQDM_AVAIL:
+                t.total = t.n
+                t.close()
+
             return
         except URLError as error:
             print(f"Failed to download {url} (trying next mirror):\n{error}")
+            t.close()
             continue
 
     raise RuntimeError(f"Error downloading {filename}")

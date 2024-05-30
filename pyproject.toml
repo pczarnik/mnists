@@ -30,6 +30,11 @@ classifiers = [
 [project.urls]
 Homepage = "https://github.com/pczarnik/mnists"
 
+[project.optional-dependencies]
+tqdm = [
+  "tqdm",
+]
+
 [tool.setuptools.dynamic]
 version = {attr = "mnists.__version__"}
 
