@@ -20,7 +20,9 @@ class EMNIST(MNIST):
         Classes containing splits of EMNIST dataset.
     """
 
-    mirrors = "https://biometrics.nist.gov/cs_links/EMNIST/"
+    mirrors = [
+        "https://biometrics.nist.gov/cs_links/EMNIST/",
+    ]
 
     resources = {"gzip": ("gzip.zip", "58c8d27c78d21e728a6bc7b3cc06412e")}
 
