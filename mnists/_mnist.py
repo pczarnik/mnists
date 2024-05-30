@@ -6,7 +6,7 @@ import numpy as np
 
 from .utils import check_file_integrity, download_file, read_idx_file
 
-TEMPORARY_DIR = tempfile.gettempdir()
+TEMPORARY_DIR = os.path.join(tempfile.gettempdir(), "mnists")
 
 
 class MNIST:
@@ -69,8 +69,6 @@ class MNIST:
         ),
     }
 
-    default_dir = os.path.join(TEMPORARY_DIR, "mnist")
-
     def __init__(
         self,
         target_dir: Optional[str] = None,
@@ -81,7 +79,7 @@ class MNIST:
         """
         Parameters
         ----------
-        target_dir : str, default='/tmp/mnist/'
+        target_dir : str, default='/tmp/<dataset_name>/'
             Directory where all files exist or will be downloaded to (if `download` is True).
         download : bool, default=True
             If True and files don't exist in `target_dir`, downloads all files to `target_dir`.
@@ -91,7 +89,11 @@ class MNIST:
             If True, loads data from files in `target_dir`.
         """
 
-        self.target_dir = self.default_dir if target_dir is None else target_dir
+        self.target_dir = (
+            os.path.join(TEMPORARY_DIR, type(self).__name__)
+            if target_dir is None
+            else target_dir
+        )
 
         self._train_images: Optional[np.ndarray] = None
         self._train_labels: Optional[np.ndarray] = None
@@ -210,8 +212,6 @@ class FashionMNIST(MNIST):
         ),
     }
 
-    default_dir = os.path.join(TEMPORARY_DIR, "fmnist")
-
 
 class KMNIST(MNIST):
     """
@@ -270,5 +270,3 @@ class KMNIST(MNIST):
             "7320c461ea6c1c855c0b718fb2a4b134",
         ),
     }
-
-    default_dir = os.path.join(TEMPORARY_DIR, "kmnist")

@@ -26,8 +26,6 @@ class EMNIST(MNIST):
 
     resources = {"gzip": ("gzip.zip", "58c8d27c78d21e728a6bc7b3cc06412e")}
 
-    default_dir = os.path.join(TEMPORARY_DIR, "emnist")
-
     def __init__(
         self,
         target_dir: Optional[str] = None,
@@ -44,8 +42,11 @@ class EMNIST(MNIST):
         force_download : bool, default=False
             If True, downloads zip to `target_dir`, even if it exists there.
         """
-
-        self.target_dir = self.default_dir if target_dir is None else target_dir
+        self.target_dir = (
+            os.path.join(TEMPORARY_DIR, type(self).__name__)
+            if target_dir is None
+            else target_dir
+        )
 
         self.Balanced = self._create_split(Balanced)
         self.ByClass = self._create_split(ByClass)
