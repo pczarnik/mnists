@@ -1,4 +1,4 @@
-from .dataset import IdxDataset
+from .dataset import IdxDataset, NpzDataset
 
 
 class MNIST(IdxDataset):
@@ -203,16 +203,16 @@ class KMNIST(IdxDataset):
     """
 
     classes = [
-        "o",
-        "ki",
-        "su",
-        "tsu",
-        "na",
-        "ha",
-        "ma",
-        "ya",
-        "re",
-        "wo",
+        "お - o",
+        "き - ki",
+        "す - su",
+        "つ - tsu",
+        "な - na",
+        "は - ha",
+        "ま - ma",
+        "や - ya",
+        "れ - re",
+        "を - wo",
     ]
 
     mirrors = [
@@ -235,5 +235,118 @@ class KMNIST(IdxDataset):
         "test_labels": (
             "t10k-labels-idx1-ubyte.gz",
             "7320c461ea6c1c855c0b718fb2a4b134",
+        ),
+    }
+
+
+class K49(NpzDataset):
+    """
+    Kuzushiji-49 Dataset
+    https://github.com/rois-codh/kmnist
+
+    Attributes
+    ----------
+    target_dir : str
+        Directory where all files exist or will be downloaded.
+    classes : list[str]
+        Class names.
+    mirrors : list[str]
+        List of urls where dataset is hosted.
+    resources : dict[str, tuple[str, str]]
+       Dictionary of data files with filename and md5 hash.
+
+    Usage
+    -----
+    >>> from mnists import K49
+    >>> k49 = K49()
+    >>> k49.train_images().dtype
+    dtype('uint8')
+
+    Citation
+    --------
+    @online{clanuwat2018deep,
+      author       = {Tarin Clanuwat and Mikel Bober-Irizar and Asanobu Kitamoto
+                      and Alex Lamb and Kazuaki Yamamoto and David Ha},
+      title        = {Deep Learning for Classical Japanese Literature},
+      date         = {2018-12-03},
+      year         = {2018},
+      eprintclass  = {cs.CV},
+      eprinttype   = {arXiv},
+      eprint       = {cs.CV/1812.01718},
+    }
+    """
+
+    classes = [
+        "あ - a",
+        "い - i",
+        "う - u",
+        "え - e",
+        "お - o",
+        "か - ka",
+        "き - ki",
+        "く - ku",
+        "け - ke",
+        "こ - ko",
+        "さ - sa",
+        "し - shi",
+        "す - su",
+        "せ - se",
+        "そ - so",
+        "た - ta",
+        "ち - chi",
+        "つ - tsu",
+        "て - te",
+        "と - to",
+        "な - na",
+        "に - ni",
+        "ぬ - nu",
+        "ね - ne",
+        "の - no",
+        "は - ha",
+        "ひ - hi",
+        "ふ - fu",
+        "へ - he",
+        "ほ - ho",
+        "ま - ma",
+        "み - mi",
+        "む - mu",
+        "め - me",
+        "も - mo",
+        "や - ya",
+        "ゆ - yu",
+        "よ - yo",
+        "ら - ra",
+        "り - ri",
+        "る - ru",
+        "れ - re",
+        "ろ - ro",
+        "わ - wa",
+        "ゐ - i",
+        "ゑ - e",
+        "を - wo",
+        "ん - n",
+        "ゝ - iteration mark",
+    ]
+
+    mirrors = [
+        "http://codh.rois.ac.jp/kmnist/dataset/k49/",
+    ]
+
+    resources = {
+        "train_images": (
+            "k49-train-imgs.npz",
+            "7ac088b20481cf51dcd01ceaab89d821",
+        ),
+        "train_labels": (
+            "k49-train-labels.npz",
+            "44a8e1b893f81e63ff38d73cad420f7a",
+        ),
+        "test_images": (
+            "k49-test-imgs.npz",
+            "d352e201d846ce6b94f42c990966f374",
+        ),
+        "test_labels": (
+            "k49-test-labels.npz",
+            "4da6f7a62e67a832d5eb1bd85c5ee448",
         ),
     }

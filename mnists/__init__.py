@@ -4,10 +4,11 @@ MNISTs
 
 Provides an easy access to MNIST-like datasets in a numpy format:
   1. MNIST
-  2. FashionMNIST
-  3. KMNIST
+  2. FashionMNIST, FMNIST
+  3. KMNIST, KuzushijiMNIST
   4. EMNIST - divided into Balanced, ByClass, ByMerge, Digits and Letters
      subsets
+  5. Kuzushiji49, K49
 
 Every dataset contains four numpy arrays:
   1. ``train_images`` of size ``(n_train_samples, width, height)``
@@ -42,8 +43,10 @@ Example usage
 """
 
 from ._emnist import EMNIST
-from ._mnist import KMNIST, MNIST, FashionMNIST
+from ._mnist import K49, KMNIST, MNIST, FashionMNIST
 
 FMNIST = FashionMNIST
+KuzushijiMNIST = KMNIST
+Kuzushiji49 = K49
 
 __version__ = "0.3.1"

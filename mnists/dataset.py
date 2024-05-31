@@ -271,3 +271,28 @@ class ZippedDataset(IdxDataset):
                 continue
 
             extract_from_zip(self.zip_filepath, filename, self.target_dir)
+
+
+class NpzDataset(IdxDataset):
+    def load(self, transpose=False) -> None:
+        """
+        Load data from files in `target_dir`.
+
+        Parameters
+        ----------
+        transpose : bool=False
+            If True, transposes train and test images.
+        """
+
+        for key, (filename, md5) in self.resources.items():
+            filepath = os.path.join(self.target_dir, filename)
+
+            if not check_file_integrity(filepath, md5):
+                raise RuntimeError(
+                    f"Dataset '{key}' not found in '{filepath}' or MD5 "
+                    "checksum is not valid. "
+                    "Use download=True or .download() to download it"
+                )
+
+            data = np.load(filepath)["arr_0"]
+            setattr(self, f"_{key}", data)
