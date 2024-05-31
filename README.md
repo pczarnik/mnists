@@ -1,6 +1,6 @@
 # MNISTs: All MNIST-like datasets in one package
 
-MNISTs provides an easy way to use MNIST and other MNIST-like datasets (e.g. FashionMNIST, KMNIST) in your numpy code.
+MNISTs provides an easy way to use MNIST and other MNIST-like datasets (FashionMNIST, KMNIST, EMNIST) in your numpy code.
 
 MNISTs replicates the functionality of `torchvision.datasets.mnist` without the need to download dozens of dependencies.
 MNISTs has only one dependency - `numpy`.
@@ -47,14 +47,15 @@ plt.show()
 ```
 ![FashionMNIST example](https://raw.githubusercontent.com/pczarnik/mnists/main/imgs/fmnist_boot.png)
 
-KMNIST example:
+EMNIST example
 ```python
-from mnists import KMNIST
+from mnists import EMNIST
 import matplotlib.pyplot as plt
 
-kmnist = KMNIST()
+emnist = EMNIST()
+letters = emnist.Letters()
 plt.imshow(
-    kmnist.test_images()[:256]
+    letters.test_images()[:256]
         .reshape(16, 16, 28, 28)
         .swapaxes(1, 2)
         .reshape(16 * 28, -1),
@@ -62,8 +63,7 @@ plt.imshow(
 plt.axis('off')
 plt.show()
 ```
-![KMNIST example](https://raw.githubusercontent.com/pczarnik/mnists/main/imgs/kmnist_256.png)
-
+![EMNIST example](https://raw.githubusercontent.com/pczarnik/mnists/main/imgs/emnist_letters_256.png)
 
 ## Installation
 
@@ -75,9 +75,12 @@ or from source:
 ```
 pip install -U git+https://github.com/pczarnik/mnists
 ```
-
 The only requirements for MNISTs are `numpy>=1.22` and `python>=3.9`.
 
+If you want to have progress bars while downloading datasets, install with
+```
+pip install mnists[tqdm]
+```
 
 ## Acknowledgments
 
