@@ -46,4 +46,4 @@ from ._mnist import KMNIST, MNIST, FashionMNIST
 
 FMNIST = FashionMNIST
 
-__version__ = "0.3.0"
+__version__ = "0.3.1"
