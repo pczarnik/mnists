@@ -17,7 +17,16 @@ class EMNIST(MNIST):
     target_dir : str
         Directory where all files exist or will be downloaded.
     Balanced, ByClass, ByMerge, Digits, Letters : class
-        Classes containing splits of EMNIST dataset.
+        Child classes containing splits of EMNIST dataset.
+
+    Usage
+    -----
+    >>> from mnists import EMNIST
+    >>> emnist = EMNIST()
+    >>> letters = emnist.Letters()
+    >>> letters.train_images().dtype
+    dtype('uint8')
+
     """
 
     mirrors = [
@@ -56,6 +65,19 @@ class EMNIST(MNIST):
 
         if download or force_download:
             self.download(force_download)
+
+    def _not_implemented(self):
+        raise NotImplementedError(
+            "Method is not implemented because EMNIST is a parent class and "
+            "is used only for downloading zip file. For accessing datasets "
+            "use any of the child classes: emnist.Balanced, emnist.ByClass, "
+            "emnist.ByMerge, emnist.Digits or emnist.Leters."
+        )
+
+    train_images = _not_implemented
+    train_labels = _not_implemented
+    test_images = _not_implemented
+    test_labels = _not_implemented
 
     def _create_split(self, split_cls: type["_Split"]) -> type["_Split"]:
         split_cls.default_base_dir = self.target_dir
@@ -172,11 +194,6 @@ class Balanced(_Split):
         Directory where all files exist or will be downloaded.
     zip_filepath : str
         Zip file from which dataset will be extracted.
-    _train_images, _train_labels, _test_images, _test_labels : np.ndarray, optional
-        Numpy array representation of train/test images/labels from EMNIST Balanced dataset.
-        May be None if wasn't loaded manually or during initialization.
-        If is not None, corresponding getter, e.g., _train_images -> train_images(),
-        will be available.
     """
 
     resources = {
@@ -210,11 +227,6 @@ class ByClass(_Split):
         Directory where all files exist or will be downloaded.
     zip_filepath : str
         Zip file from which dataset will be extracted.
-    _train_images, _train_labels, _test_images, _test_labels : np.ndarray, optional
-        Numpy array representation of train/test images/labels from EMNIST ByClass dataset.
-        May be None if wasn't loaded manually or during initialization.
-        If is not None, corresponding getter, e.g., _train_images -> train_images(),
-        will be available.
     """
 
     resources = {
@@ -248,11 +260,6 @@ class ByMerge(_Split):
         Directory where all files exist or will be downloaded.
     zip_filepath : str
         Zip file from which dataset will be extracted.
-    _train_images, _train_labels, _test_images, _test_labels : np.ndarray, optional
-        Numpy array representation of train/test images/labels from EMNIST ByMerge dataset.
-        May be None if wasn't loaded manually or during initialization.
-        If is not None, corresponding getter, e.g., _train_images -> train_images(),
-        will be available.
     """
 
     resources = {
@@ -286,11 +293,6 @@ class Digits(_Split):
         Directory where all files exist or will be downloaded.
     zip_filepath : str
         Zip file from which dataset will be extracted.
-    _train_images, _train_labels, _test_images, _test_labels : np.ndarray, optional
-        Numpy array representation of train/test images/labels from EMNIST Digits dataset.
-        May be None if wasn't loaded manually or during initialization.
-        If is not None, corresponding getter, e.g., _train_images -> train_images(),
-        will be available.
     """
 
     resources = {
@@ -324,11 +326,6 @@ class Letters(_Split):
         Directory where all files exist or will be downloaded.
     zip_filepath : str
         Zip file from which dataset will be extracted.
-    _train_images, _train_labels, _test_images, _test_labels : np.ndarray, optional
-        Numpy array representation of train/test images/labels from EMNIST Letters dataset.
-        May be None if wasn't loaded manually or during initialization.
-        If is not None, corresponding getter, e.g., _train_images -> train_images(),
-        will be available.
     """
 
     resources = {

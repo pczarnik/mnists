@@ -18,17 +18,34 @@ class MNIST:
     ----------
     target_dir : str
         Directory where all files exist or will be downloaded.
-    _train_images, _train_labels, _test_images, _test_labels : np.ndarray, optional
-        Numpy array representation of train/test images/labels from MNIST dataset.
-        May be None if wasn't loaded manually or during initialization.
-        If is not None, corresponding getter, e.g., _train_images -> train_images(),
-        will be available.
     classes : list[str]
         Class names.
     mirrors : list[str]
         List of urls where dataset is hosted.
     resources : dict[str, tuple[str, str]]
        Dictionary of data files with filename and md5 hash.
+
+    Example usage
+    -------------
+    >>> from mnists import MNIST
+    >>> mnist = MNIST()
+    >>> type(mnist.train_images())
+    <class 'numpy.ndarray'>
+    >>> mnist.train_images().dtype
+    dtype('uint8')
+    >>> mnist.train_images().min()
+    0
+    >>> mnist.train_images().max()
+    255
+    >>> mnist.train_images().shape
+    (60000, 28, 28)
+    >>> mnist.train_labels().shape
+    (60000,)
+    >>> mnist.test_images().shape
+    (10000, 28, 28)
+    >>> mnist.test_labels().shape
+    (10000,)
+
     """
 
     classes = [
@@ -106,6 +123,18 @@ class MNIST:
         if load:
             self.load()
 
+    def train_images(self) -> Optional[np.ndarray]:
+        return self._train_images
+
+    def train_labels(self) -> Optional[np.ndarray]:
+        return self._train_labels
+
+    def test_images(self) -> Optional[np.ndarray]:
+        return self._test_images
+
+    def test_labels(self) -> Optional[np.ndarray]:
+        return self._test_labels
+
     def download(self, force: bool = False) -> None:
         """
         Download files from mirrors and save to `target_dir`.
@@ -142,16 +171,7 @@ class MNIST:
                 )
 
             data = read_idx_file(filepath)
-            self._add_getter(key, data)
-
-    def _add_getter(self, fn_name: str, data: np.ndarray) -> None:
-        var_name = f"_{fn_name}"
-        setattr(self, var_name, data)
-
-        def getter() -> np.ndarray:
-            return getattr(self, var_name)
-
-        setattr(self, fn_name, getter)
+            setattr(self, f"_{key}", data)
 
 
 class FashionMNIST(MNIST):
@@ -163,11 +183,6 @@ class FashionMNIST(MNIST):
     ----------
     target_dir : str
         Directory where all files exist or will be downloaded.
-    _train_images, _train_labels, _test_images, _test_labels : np.ndarray, optional
-        Numpy array representation of train/test images/labels from FashionMNIST dataset.
-        May be None if wasn't loaded manually or during initialization.
-        If is not None, corresponding getter, e.g., _train_images -> train_images(),
-        will be available.
     classes : list[str]
         Class names.
     mirrors : list[str]
@@ -222,11 +237,6 @@ class KMNIST(MNIST):
     ----------
     target_dir : str
         Directory where all files exist or will be downloaded.
-    _train_images, _train_labels, _test_images, _test_labels : np.ndarray, optional
-        Numpy array representation of train/test images/labels from KMNIST dataset.
-        May be None if wasn't loaded manually or during initialization.
-        If is not None, corresponding getter, e.g., _train_images -> train_images(),
-        will be available.
     classes : list[str]
         Class names.
     mirrors : list[str]
