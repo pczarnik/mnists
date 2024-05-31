@@ -1,15 +1,7 @@
-import os
-import tempfile
-from typing import Optional
-
-import numpy as np
-
-from .utils import check_file_integrity, download_file, read_idx_file
-
-TEMPORARY_DIR = os.path.join(tempfile.gettempdir(), "mnists")
+from .dataset import IdxDataset
 
 
-class MNIST:
+class MNIST(IdxDataset):
     """
     MNIST Dataset
     http://yann.lecun.com/exdb/mnist
@@ -98,95 +90,8 @@ class MNIST:
         ),
     }
 
-    def __init__(
-        self,
-        target_dir: Optional[str] = None,
-        download: bool = True,
-        force_download: bool = False,
-        load: bool = True,
-    ) -> None:
-        """
-        Parameters
-        ----------
-        target_dir : str, default='/tmp/<dataset_name>/'
-            Directory where all files exist or will be downloaded to (if `download` is True).
-        download : bool, default=True
-            If True and files don't exist in `target_dir`, downloads all files to `target_dir`.
-        force_download : bool, default=False
-            If True, downloads all files to `target_dir`, even if they exist there.
-        load : bool, default=True
-            If True, loads data from files in `target_dir`.
-        """
 
-        self.target_dir = (
-            os.path.join(TEMPORARY_DIR, type(self).__name__)
-            if target_dir is None
-            else target_dir
-        )
-
-        self._train_images: Optional[np.ndarray] = None
-        self._train_labels: Optional[np.ndarray] = None
-        self._test_images: Optional[np.ndarray] = None
-        self._test_labels: Optional[np.ndarray] = None
-
-        if download or force_download:
-            self.download(force_download)
-
-        if load:
-            self.load()
-
-    def train_images(self) -> Optional[np.ndarray]:
-        return self._train_images
-
-    def train_labels(self) -> Optional[np.ndarray]:
-        return self._train_labels
-
-    def test_images(self) -> Optional[np.ndarray]:
-        return self._test_images
-
-    def test_labels(self) -> Optional[np.ndarray]:
-        return self._test_labels
-
-    def download(self, force: bool = False) -> None:
-        """
-        Download files from mirrors and save to `target_dir`.
-
-        Parameters
-        ----------
-        force : bool=False
-            If True, downloads all files even if they exist.
-        """
-
-        os.makedirs(self.target_dir, exist_ok=True)
-
-        for filename, md5 in self.resources.values():
-            filepath = os.path.join(self.target_dir, filename)
-
-            if not force and check_file_integrity(filepath, md5):
-                continue
-
-            download_file(self.mirrors, filename, filepath)
-
-    def load(self) -> None:
-        """
-        Load data from files in `target_dir`.
-        """
-
-        for key, (filename, md5) in self.resources.items():
-            filepath = os.path.join(self.target_dir, filename)
-
-            if not check_file_integrity(filepath, md5):
-                raise RuntimeError(
-                    f"Dataset '{key}' not found in '{filepath}' or MD5 "
-                    "checksum is not valid. "
-                    "Use download=True or .download() to download it"
-                )
-
-            data = read_idx_file(filepath)
-            setattr(self, f"_{key}", data)
-
-
-class FashionMNIST(MNIST):
+class FashionMNIST(IdxDataset):
     """
     Fashion-MNIST Dataset
     https://github.com/zalandoresearch/fashion-mnist
@@ -260,7 +165,7 @@ class FashionMNIST(MNIST):
     }
 
 
-class KMNIST(MNIST):
+class KMNIST(IdxDataset):
     """
     Kuzushiji-MNIST Dataset
     https://github.com/rois-codh/kmnist
