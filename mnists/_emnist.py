@@ -27,6 +27,16 @@ class EMNIST(MNIST):
     >>> letters.train_images().dtype
     dtype('uint8')
 
+    Citation
+    --------
+    @article{cohen2017emnist,
+      title={EMNIST: an extension of MNIST to handwritten letters},
+      author={Gregory Cohen and Saeed Afshar and Jonathan Tapson and André van Schaik},
+      year={2017},
+      eprint={1702.05373},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV}
+    }
     """
 
     mirrors = [
@@ -194,6 +204,25 @@ class Balanced(_Split):
         Directory where all files exist or will be downloaded.
     zip_filepath : str
         Zip file from which dataset will be extracted.
+
+    Usage
+    -----
+    >>> from mnists import EMNIST
+    >>> emnist = EMNIST()
+    >>> balanced = emnist.Balanced()
+    >>> balanced.train_images().dtype
+    dtype('uint8')
+
+    Citation
+    --------
+    @article{cohen2017emnist,
+      title={EMNIST: an extension of MNIST to handwritten letters},
+      author={Gregory Cohen and Saeed Afshar and Jonathan Tapson and André van Schaik},
+      year={2017},
+      eprint={1702.05373},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV}
+    }
     """
 
     resources = {
@@ -227,6 +256,25 @@ class ByClass(_Split):
         Directory where all files exist or will be downloaded.
     zip_filepath : str
         Zip file from which dataset will be extracted.
+
+    Usage
+    -----
+    >>> from mnists import EMNIST
+    >>> emnist = EMNIST()
+    >>> byclass = emnist.ByClass()
+    >>> byclass.train_images().dtype
+    dtype('uint8')
+
+    Citation
+    --------
+    @article{cohen2017emnist,
+      title={EMNIST: an extension of MNIST to handwritten letters},
+      author={Gregory Cohen and Saeed Afshar and Jonathan Tapson and André van Schaik},
+      year={2017},
+      eprint={1702.05373},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV}
+    }
     """
 
     resources = {
@@ -260,6 +308,25 @@ class ByMerge(_Split):
         Directory where all files exist or will be downloaded.
     zip_filepath : str
         Zip file from which dataset will be extracted.
+
+    Usage
+    -----
+    >>> from mnists import EMNIST
+    >>> emnist = EMNIST()
+    >>> bymerge = emnist.ByMerge()
+    >>> bymerge.train_images().dtype
+    dtype('uint8')
+
+    Citation
+    --------
+    @article{cohen2017emnist,
+      title={EMNIST: an extension of MNIST to handwritten letters},
+      author={Gregory Cohen and Saeed Afshar and Jonathan Tapson and André van Schaik},
+      year={2017},
+      eprint={1702.05373},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV}
+    }
     """
 
     resources = {
@@ -293,6 +360,25 @@ class Digits(_Split):
         Directory where all files exist or will be downloaded.
     zip_filepath : str
         Zip file from which dataset will be extracted.
+
+    Usage
+    -----
+    >>> from mnists import EMNIST
+    >>> emnist = EMNIST()
+    >>> digits = emnist.Digits()
+    >>> digits.train_images().dtype
+    dtype('uint8')
+
+    Citation
+    --------
+    @article{cohen2017emnist,
+      title={EMNIST: an extension of MNIST to handwritten letters},
+      author={Gregory Cohen and Saeed Afshar and Jonathan Tapson and André van Schaik},
+      year={2017},
+      eprint={1702.05373},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV}
+    }
     """
 
     resources = {
@@ -326,6 +412,25 @@ class Letters(_Split):
         Directory where all files exist or will be downloaded.
     zip_filepath : str
         Zip file from which dataset will be extracted.
+
+    Usage
+    -----
+    >>> from mnists import EMNIST
+    >>> emnist = EMNIST()
+    >>> letters = emnist.Letters()
+    >>> letters.train_images().dtype
+    dtype('uint8')
+
+    Citation
+    --------
+    @article{cohen2017emnist,
+      title={EMNIST: an extension of MNIST to handwritten letters},
+      author={Gregory Cohen and Saeed Afshar and Jonathan Tapson and André van Schaik},
+      year={2017},
+      eprint={1702.05373},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV}
+    }
     """
 
     resources = {

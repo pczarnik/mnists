@@ -25,8 +25,8 @@ class MNIST:
     resources : dict[str, tuple[str, str]]
        Dictionary of data files with filename and md5 hash.
 
-    Example usage
-    -------------
+    Usage
+    -----
     >>> from mnists import MNIST
     >>> mnist = MNIST()
     >>> type(mnist.train_images())
@@ -46,6 +46,18 @@ class MNIST:
     >>> mnist.test_labels().shape
     (10000,)
 
+    Citation
+    --------
+    @article{lecun-98,
+      author={Lecun, Y. and Bottou, L. and Bengio, Y. and Haffner, P.},
+      journal={Proceedings of the IEEE},
+      title={Gradient-based learning applied to document recognition},
+      year={1998},
+      volume={86},
+      number={11},
+      pages={2278-2324},
+      doi={10.1109/5.726791}
+    }
     """
 
     classes = [
@@ -189,6 +201,26 @@ class FashionMNIST(MNIST):
         List of urls where dataset is hosted.
     resources : dict[str, tuple[str, str]]
        Dictionary of data files with filename and md5 hash.
+
+    Usage
+    -----
+    >>> from mnists import FashionMNIST
+    >>> fmnist = FashionMNIST()
+    >>> fmnist.train_images().dtype
+    dtype('uint8')
+
+    Citation
+    --------
+    @online{xiao2017/online,
+      author       = {Han Xiao and Kashif Rasul and Roland Vollgraf},
+      title        = {Fashion-MNIST: a Novel Image Dataset for Benchmarking
+                      Machine Learning Algorithms},
+      date         = {2017-08-28},
+      year         = {2017},
+      eprintclass  = {cs.LG},
+      eprinttype   = {arXiv},
+      eprint       = {cs.LG/1708.07747},
+    }
     """
 
     classes = [
@@ -243,6 +275,26 @@ class KMNIST(MNIST):
         List of urls where dataset is hosted.
     resources : dict[str, tuple[str, str]]
        Dictionary of data files with filename and md5 hash.
+
+    Usage
+    -----
+    >>> from mnists import KMNIST
+    >>> kmnist = KMNIST()
+    >>> kmnist.train_images().dtype
+    dtype('uint8')
+
+    Citation
+    --------
+    @online{clanuwat2018deep,
+      author       = {Tarin Clanuwat and Mikel Bober-Irizar and Asanobu Kitamoto
+                      and Alex Lamb and Kazuaki Yamamoto and David Ha},
+      title        = {Deep Learning for Classical Japanese Literature},
+      date         = {2018-12-03},
+      year         = {2018},
+      eprintclass  = {cs.CV},
+      eprinttype   = {arXiv},
+      eprint       = {cs.CV/1812.01718},
+    }
     """
 
     classes = [
