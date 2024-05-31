@@ -88,6 +88,56 @@ class Balanced(ZippedDataset):
     }
     """
 
+    classes = [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "A",
+        "B",
+        "C - c",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I - i",
+        "J - j",
+        "K - k",
+        "L - l",
+        "M - m",
+        "N",
+        "O - o",
+        "P - p",
+        "Q",
+        "R",
+        "S - s",
+        "T",
+        "U - u",
+        "V - v",
+        "W - w",
+        "X - x",
+        "Y - y",
+        "Z - z",
+        "a",
+        "b",
+        "d",
+        "e",
+        "f",
+        "g",
+        "h",
+        "n",
+        "q",
+        "r",
+        "t",
+    ]
+
     resources = {
         "train_images": (
             "emnist-balanced-train-images-idx3-ubyte.gz",
@@ -139,6 +189,71 @@ class ByClass(ZippedDataset):
       primaryClass={cs.CV}
     }
     """
+
+    classes = [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "M",
+        "N",
+        "O",
+        "P",
+        "Q",
+        "R",
+        "S",
+        "T",
+        "U",
+        "V",
+        "W",
+        "X",
+        "Y",
+        "Z",
+        "a",
+        "b",
+        "c",
+        "d",
+        "e",
+        "f",
+        "g",
+        "h",
+        "i",
+        "j",
+        "k",
+        "l",
+        "m",
+        "n",
+        "o",
+        "p",
+        "q",
+        "r",
+        "s",
+        "t",
+        "u",
+        "v",
+        "w",
+        "x",
+        "y",
+        "z",
+    ]
 
     resources = {
         "train_images": (
@@ -244,6 +359,19 @@ class Digits(ZippedDataset):
     }
     """
 
+    classes = [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+    ]
+
     resources = {
         "train_images": (
             "emnist-digits-train-images-idx3-ubyte.gz",
@@ -295,6 +423,35 @@ class Letters(ZippedDataset):
       primaryClass={cs.CV}
     }
     """
+
+    classes = [
+        "a",
+        "b",
+        "c",
+        "d",
+        "e",
+        "f",
+        "g",
+        "h",
+        "i",
+        "j",
+        "k",
+        "l",
+        "m",
+        "n",
+        "o",
+        "p",
+        "q",
+        "r",
+        "s",
+        "t",
+        "u",
+        "v",
+        "w",
+        "x",
+        "y",
+        "z",
+    ]
 
     resources = {
         "train_images": (
