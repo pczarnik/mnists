@@ -67,6 +67,8 @@ class Balanced(ZippedDataset):
         Directory where all files exist or will be downloaded.
     zip_filepath : str
         Zip file from which dataset will be extracted.
+    classes : list[str]
+        Class names.
 
     Usage
     -----
@@ -169,6 +171,8 @@ class ByClass(ZippedDataset):
         Directory where all files exist or will be downloaded.
     zip_filepath : str
         Zip file from which dataset will be extracted.
+    classes : list[str]
+        Class names.
 
     Usage
     -----
@@ -286,6 +290,8 @@ class ByMerge(ZippedDataset):
         Directory where all files exist or will be downloaded.
     zip_filepath : str
         Zip file from which dataset will be extracted.
+    classes : list[str]
+        Class names.
 
     Usage
     -----
@@ -338,6 +344,8 @@ class Digits(ZippedDataset):
         Directory where all files exist or will be downloaded.
     zip_filepath : str
         Zip file from which dataset will be extracted.
+    classes : list[str]
+        Class names.
 
     Usage
     -----
@@ -403,6 +411,8 @@ class Letters(ZippedDataset):
         Directory where all files exist or will be downloaded.
     zip_filepath : str
         Zip file from which dataset will be extracted.
+    classes : list[str]
+        Class names.
 
     Usage
     -----
