@@ -313,6 +313,8 @@ class ByMerge(ZippedDataset):
     }
     """
 
+    classes = Balanced.classes
+
     resources = {
         "train_images": (
             "emnist-bymerge-train-images-idx3-ubyte.gz",
