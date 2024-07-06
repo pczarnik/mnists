@@ -153,14 +153,19 @@ class Tqdm(tqdm):
         return self.update(b * bsize - self.n)
 
 
-def custom_tqdm(*args, **kwargs):
-    if _TQDM_ACTIVE:
+def custom_tqdm(*args, verbose, **kwargs):
+    if _TQDM_ACTIVE and verbose:
         return Tqdm(*args, **kwargs)
     else:
         return EmptyTqdm(*args, **kwargs)
 
 
-def download_file(mirrors: list[str], filename: str, filepath: str) -> None:
+def download_file(
+    mirrors: list[str],
+    filename: str,
+    filepath: str,
+    verbose: bool = False,
+) -> None:
     """
     Download file trying every mirror if the previous one fails.
 
@@ -172,24 +177,29 @@ def download_file(mirrors: list[str], filename: str, filepath: str) -> None:
         Name of the file on the server.
     filepath : str
         Path to the output file.
+    verbose : bool, default=False
+        If True, prints download logs.
     """
 
     for mirror in mirrors:
         url = urljoin(mirror, filename)
         try:
-            print(f"Downloading {url} to {filepath}")
+            if verbose:
+                print(f"Downloading {url} to {filepath}")
             with custom_tqdm(
                 unit="B",
                 unit_scale=True,
                 unit_divisor=1024,
                 miniters=1,
                 desc=filepath,
+                verbose=verbose,
             ) as t:
                 urlretrieve(url, filepath, reporthook=t.update_to)
                 t.total = t.n
             return
         except URLError as error:
-            print(f"Failed to download {url} (trying next mirror):\n{error}")
+            if verbose:
+                print(f"Failed to download {url} (trying next mirror):\n{error}")
             continue
 
     raise RuntimeError(f"Error downloading {filename}")

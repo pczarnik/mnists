@@ -18,6 +18,7 @@ class Dataset:
         target_dir: Optional[str] = None,
         download: bool = True,
         force_download: bool = False,
+        verbose: bool = True,
     ) -> None:
         """
         Parameters
@@ -28,6 +29,8 @@ class Dataset:
             If True and files don't exist in `target_dir`, downloads all files to `target_dir`.
         force_download : bool, default=False
             If True, downloads all files to `target_dir`, even if they exist there.
+        verbose : bool, default=True
+            If True, prints download logs.
         """
 
         self.target_dir = (
@@ -37,9 +40,9 @@ class Dataset:
         )
 
         if download or force_download:
-            self.download(force_download)
+            self.download(force_download, verbose)
 
-    def download(self, force: bool = False) -> None:
+    def download(self, force: bool = False, verbose: bool = True) -> None:
         """
         Download files from mirrors and save to `target_dir`.
 
@@ -47,6 +50,8 @@ class Dataset:
         ----------
         force : bool=False
             If True, downloads all files even if they exist.
+        verbose : bool, default=True
+            If True, prints download logs.
         """
 
         os.makedirs(self.target_dir, exist_ok=True)
@@ -57,7 +62,7 @@ class Dataset:
             if not force and check_file_integrity(filepath, md5):
                 continue
 
-            download_file(self.mirrors, filename, filepath)
+            download_file(self.mirrors, filename, filepath, verbose)
 
 
 class IdxDataset(Dataset):
@@ -67,6 +72,7 @@ class IdxDataset(Dataset):
         download: bool = True,
         force_download: bool = False,
         load: bool = True,
+        verbose: bool = True,
     ) -> None:
         """
         Parameters
@@ -79,6 +85,8 @@ class IdxDataset(Dataset):
             If True, downloads all files to `target_dir`, even if they exist there.
         load : bool, default=True
             If True, loads data from files in `target_dir`.
+        verbose : bool, default=True
+            If True, prints download logs.
         """
 
         self.target_dir = (
@@ -93,7 +101,7 @@ class IdxDataset(Dataset):
         self._test_labels: Optional[np.ndarray] = None
 
         if download or force_download:
-            self.download(force_download)
+            self.download(force_download, verbose)
 
         if load:
             self.load()
