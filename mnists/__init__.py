@@ -49,4 +49,4 @@ FMNIST = FashionMNIST
 KuzushijiMNIST = KMNIST
 Kuzushiji49 = K49
 
-__version__ = "0.4.0"
+__version__ = "0.4.1"
