@@ -481,3 +481,9 @@ class Letters(ZippedDataset):
             "d4108920cd86601ec7689a97f2de7f59",
         ),
     }
+
+    def train_labels(self):
+        return super().train_labels() - 1
+
+    def test_labels(self):
+        return super().test_labels() - 1
