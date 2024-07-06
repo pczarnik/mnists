@@ -55,7 +55,7 @@ import matplotlib.pyplot as plt
 emnist = EMNIST()
 letters = emnist.Letters()
 plt.imshow(
-    letters.test_images()[:256]
+    letters.train_images()[:256]
         .reshape(16, 16, 28, 28)
         .swapaxes(1, 2)
         .reshape(16 * 28, -1),
