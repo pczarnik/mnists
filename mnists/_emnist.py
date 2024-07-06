@@ -1,5 +1,3 @@
-from typing import Optional
-
 from .dataset import SplitDataset, ZippedDataset
 
 
@@ -41,13 +39,8 @@ class EMNIST(SplitDataset):
 
     resources = {"gzip": ("gzip.zip", "58c8d27c78d21e728a6bc7b3cc06412e")}
 
-    def __init__(
-        self,
-        target_dir: Optional[str] = None,
-        download: bool = True,
-        force_download: bool = False,
-    ) -> None:
-        super().__init__(target_dir, download, force_download)
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
 
         self.Balanced = self._create_split(Balanced)
         self.ByClass = self._create_split(ByClass)
