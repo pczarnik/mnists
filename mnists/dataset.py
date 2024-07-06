@@ -282,14 +282,9 @@ class ZippedDataset(IdxDataset):
 
 
 class NpzDataset(IdxDataset):
-    def load(self, transpose=False) -> None:
+    def load(self) -> None:
         """
         Load data from files in `target_dir`.
-
-        Parameters
-        ----------
-        transpose : bool=False
-            If True, transposes train and test images.
         """
 
         for key, (filename, md5) in self.resources.items():
